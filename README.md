@@ -73,7 +73,10 @@ docker build -f Dockerfile.dashboard .
 
 `https://git.m0sh1.cc/m0sh1/netzbremse` is the source-of-truth repository.
 GitHub is a push mirror for GHCR and GitHub-side automation. Pushes to `main`
-run tests and `semantic-release` against Forgejo. Tags (`v*`) trigger the full
+run tests and `semantic-release` against Forgejo. The release step needs
+Woodpecker secrets `forgejo_username` and `forgejo_token` with permission to
+push tags to the Forgejo repository; Woodpecker's clone-only netrc credentials
+are not available inside the Node release image. Tags (`v*`) trigger the full
 release pipeline:
 
 1. Build release images for `linux/amd64`
