@@ -3,8 +3,8 @@ when:
     ref: refs/tags/v*
 
 variables:
-  - &measurement_image "ghcr.io/sm-moshi/netzbremse-measurement"
-  - &dashboard_image "ghcr.io/sm-moshi/netzbremse-dashboard"
+  - &measurement_image "ghcr.io/yaelmoshi/netzbremse-measurement"
+  - &dashboard_image "ghcr.io/yaelmoshi/netzbremse-dashboard"
   - &harbor_measurement_image "harbor.m0sh1.cc/apps/netzbremse-measurement"
   - &harbor_dashboard_image "harbor.m0sh1.cc/apps/netzbremse-dashboard"
 
@@ -80,7 +80,7 @@ steps:
     depends_on:
       - build-and-push-measurement
     environment:
-      IMAGE_REF: "ghcr.io/sm-moshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "ghcr.io/yaelmoshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
       TRIVY_USERNAME:
         from_secret: github_username
       TRIVY_PASSWORD:
@@ -95,7 +95,7 @@ steps:
     depends_on:
       - build-and-push-dashboard
     environment:
-      IMAGE_REF: "ghcr.io/sm-moshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "ghcr.io/yaelmoshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
       TRIVY_USERNAME:
         from_secret: github_username
       TRIVY_PASSWORD:
@@ -111,7 +111,7 @@ steps:
     depends_on:
       - trivy-scan-measurement
     environment:
-      IMAGE_REF: "ghcr.io/sm-moshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "ghcr.io/yaelmoshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
       SYFT_REGISTRY_AUTH_AUTHORITY: ghcr.io
       SYFT_REGISTRY_AUTH_USERNAME:
         from_secret: github_username
@@ -125,7 +125,7 @@ steps:
     depends_on:
       - trivy-scan-dashboard
     environment:
-      IMAGE_REF: "ghcr.io/sm-moshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "ghcr.io/yaelmoshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
       SYFT_REGISTRY_AUTH_AUTHORITY: ghcr.io
       SYFT_REGISTRY_AUTH_USERNAME:
         from_secret: github_username
@@ -140,7 +140,7 @@ steps:
     depends_on:
       - sbom-generate-measurement
     environment:
-      IMAGE_REF: "ghcr.io/sm-moshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "ghcr.io/yaelmoshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
       COSIGN_EXPERIMENTAL: "1"
       COSIGN_KEY:
         from_secret: cosign_key
@@ -163,7 +163,7 @@ steps:
     depends_on:
       - sbom-generate-dashboard
     environment:
-      IMAGE_REF: "ghcr.io/sm-moshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "ghcr.io/yaelmoshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
       COSIGN_EXPERIMENTAL: "1"
       COSIGN_KEY:
         from_secret: cosign_key
@@ -181,7 +181,50 @@ steps:
       - cosign attest --key /tmp/cosign.key --type vuln --predicate dashboard.vuln.json --yes $${IMAGE_REF}
       - rm -f /tmp/cosign.key
 
-  # ── Cosign sign Harbor (parallel, after direct build push) ─────────
+  # ── Mirror to Harbor (parallel, each after its own GHCR sign) ──────
+  - name: mirror-measurement-to-harbor
+    image: dhi.io/crane:0.21.5-debian13-dev@sha256:49c75694b4f18603df82885eb7c5a47969f956d34d8c036179bdd42799dfb50d
+    depends_on:
+      - cosign-sign-measurement-ghcr
+    environment:
+      SRC_IMAGE: "ghcr.io/yaelmoshi/netzbremse-measurement:${CI_COMMIT_TAG##v}"
+      DST_IMAGE: "harbor.m0sh1.cc/apps/netzbremse-measurement:${CI_COMMIT_TAG##v}"
+      GHCR_USERNAME:
+        from_secret: github_username
+      GHCR_PASSWORD:
+        from_secret: github_token
+      HARBOR_USERNAME:
+        from_secret: harbor_username
+      HARBOR_PASSWORD:
+        from_secret: harbor_token
+    commands:
+      - crane auth login ghcr.io -u "$GHCR_USERNAME" -p "$GHCR_PASSWORD"
+      - crane auth login harbor.m0sh1.cc -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD"
+      - crane cp "$SRC_IMAGE" "$DST_IMAGE"
+      - crane cp "$SRC_IMAGE" "harbor.m0sh1.cc/apps/netzbremse-measurement:latest"
+
+  - name: mirror-dashboard-to-harbor
+    image: dhi.io/crane:0.21.5-debian13-dev@sha256:49c75694b4f18603df82885eb7c5a47969f956d34d8c036179bdd42799dfb50d
+    depends_on:
+      - cosign-sign-dashboard-ghcr
+    environment:
+      SRC_IMAGE: "ghcr.io/yaelmoshi/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
+      DST_IMAGE: "harbor.m0sh1.cc/apps/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
+      GHCR_USERNAME:
+        from_secret: github_username
+      GHCR_PASSWORD:
+        from_secret: github_token
+      HARBOR_USERNAME:
+        from_secret: harbor_username
+      HARBOR_PASSWORD:
+        from_secret: harbor_token
+    commands:
+      - crane auth login ghcr.io -u "$GHCR_USERNAME" -p "$GHCR_PASSWORD"
+      - crane auth login harbor.m0sh1.cc -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD"
+      - crane cp "$SRC_IMAGE" "$DST_IMAGE"
+      - crane cp "$SRC_IMAGE" "harbor.m0sh1.cc/apps/netzbremse-dashboard:latest"
+
+  # ── Cosign sign Harbor (parallel, each after its own mirror) ───────
   - name: cosign-sign-measurement-harbor
     image: dhi.io/cosign:3.0.6-alpine3.23-dev@sha256:c40648f14b1ebcc72216a453ef30c9265ac0c91206b6f65d2a3ba1f940ad7547
     depends_on:

@@ -13,7 +13,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/sm-moshi/netzbremse/internal/model"
+	"github.com/yaelmoshi/netzbremse/internal/model"
 )
 
 //go:embed schema.sql

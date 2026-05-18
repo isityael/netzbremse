@@ -80,14 +80,14 @@ are not available inside the Node release image. Tags (`v*`) trigger the full
 release pipeline:
 
 1. Build release images for `linux/amd64`
-2. Push to `ghcr.io/sm-moshi/netzbremse-{measurement,dashboard}`
+2. Push to `ghcr.io/yaelmoshi/netzbremse-{measurement,dashboard}`
 3. Trivy scan, Cosign sign, SPDX SBOM + vuln attestations
 4. Mirror to `harbor.m0sh1.cc/apps/` with Cosign + Notation signatures
 5. GitHub Actions generate CodeQL analysis and build provenance attestations
 
 For the live GitOps deployment, `ghcr.io` is the source of truth. Harbor keeps a
 signed replica for storage and downstream reuse, but the cluster should consume
-`ghcr.io/sm-moshi/netzbremse-*` images.
+`ghcr.io/yaelmoshi/netzbremse-*` images.
 
 ## Licence
 
