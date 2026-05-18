@@ -1,4 +1,4 @@
-module github.com/isityael/netzbremse
+module github.com/yaelmoshi/netzbremse
 
 go 1.26.2
 

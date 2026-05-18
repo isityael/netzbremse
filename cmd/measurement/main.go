@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/isityael/netzbremse/internal/collector"
-	"github.com/isityael/netzbremse/internal/config"
-	"github.com/isityael/netzbremse/internal/postgres"
+	"github.com/yaelmoshi/netzbremse/internal/collector"
+	"github.com/yaelmoshi/netzbremse/internal/config"
+	"github.com/yaelmoshi/netzbremse/internal/postgres"
 )
 
 func deref(v *float64) float64 {

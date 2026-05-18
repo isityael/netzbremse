@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/isityael/netzbremse/internal/config"
+	"github.com/yaelmoshi/netzbremse/internal/config"
 )
 
 func TestRunEmptyCommand(t *testing.T) {
