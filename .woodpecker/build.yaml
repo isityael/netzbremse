@@ -44,6 +44,7 @@ steps:
         branch: main
     environment:
       npm_config_cache: /woodpecker/src/git.m0sh1.cc/m0sh1/netzbremse/.npm-cache
+      PUPPETEER_SKIP_DOWNLOAD: "true"
       FORGEJO_USERNAME:
         from_secret: forgejo_username
       FORGEJO_TOKEN:
