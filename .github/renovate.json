@@ -12,6 +12,10 @@
     "github-actions",
     "woodpecker"
   ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "groupName": "lock file maintenance"
+  },
   "packageRules": [
     {
       "matchManagers": ["gomod"],
@@ -49,6 +53,11 @@
       "description": "Auto-merge GitHub Actions updates",
       "matchManagers": ["github-actions"],
       "automerge": true
+    },
+    {
+      "description": "Group lockfile-only refreshes for package managers where package.json ranges already allow newer versions",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "groupName": "lock file maintenance"
     }
   ]
 }
