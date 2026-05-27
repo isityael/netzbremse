@@ -45,13 +45,17 @@ func LoadMeasurement() (Measurement, error) {
 		}
 		interval = parsed
 	}
+	timeout, err := durationFromEnv("NETZBREMSE_SPEEDTEST_TIMEOUT", 2*time.Minute)
+	if err != nil {
+		return Measurement{}, err
+	}
 	return Measurement{
 		ListenAddress: envOrDefault("NETZBREMSE_MEASUREMENT_LISTEN_ADDR", ":8081"),
 		ImportDir:     os.Getenv("NETZBREMSE_IMPORT_DIR"),
 		Interval:      interval,
 		Endpoint:      envOrDefault("NETZBREMSE_ENDPOINT", "https://netzbremse.de/speed"),
 		Command:       envOrDefault("NETZBREMSE_SPEEDTEST_COMMAND", "node /app/netzbremse-browser.mjs"),
-		Timeout:       durationOrDefault("NETZBREMSE_SPEEDTEST_TIMEOUT", 2*time.Minute),
+		Timeout:       timeout,
 	}, nil
 }
 
@@ -81,11 +85,20 @@ func envOrDefault(key, fallback string) string {
 }
 
 func durationOrDefault(key string, fallback time.Duration) time.Duration {
+	parsed, err := durationFromEnv(key, fallback)
+	if err != nil {
+		return fallback
+	}
+	return parsed
+}
+
+func durationFromEnv(key string, fallback time.Duration) (time.Duration, error) {
 	if value := os.Getenv(key); value != "" {
 		parsed, err := time.ParseDuration(value)
-		if err == nil {
-			return parsed
+		if err != nil {
+			return 0, fmt.Errorf("parse %s: %w", key, err)
 		}
+		return parsed, nil
 	}
-	return fallback
+	return fallback, nil
 }

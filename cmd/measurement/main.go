@@ -81,7 +81,10 @@ func main() {
 	server := &http.Server{
 		Addr:              measurementConfig.ListenAddress,
 		Handler:           mux,
+		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
 	go func() {
