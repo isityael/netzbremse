@@ -1,0 +1,257 @@
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-strong: #f8f8f8;
+  --line: #e5e5e5;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --accent: #e20074;
+  --accent-soft: rgba(226, 0, 116, 0.08);
+  --teal: #059669;
+  --rose: #e11d48;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+code,
+table,
+.stat-card strong,
+.panel-meta,
+.eyebrow,
+.signal-label,
+.signal-subtle {
+  font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+}
+
+/* Remove ambient blurs — they don't exist in the clean upstream design */
+.ambient {
+  display: none;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(220px, 0.7fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+}
+
+.hero-copy,
+.hero-panel,
+.panel,
+.stat-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+}
+
+.hero-panel {
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: flex;
+  align-items: stretch;
+}
+
+.signal-card {
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background:
+    linear-gradient(180deg, rgba(226, 0, 116, 0.08), rgba(5, 150, 105, 0.05)),
+    var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.eyebrow,
+.panel-kicker {
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  max-width: 24ch;
+  color: var(--text);
+}
+
+h2 {
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+}
+
+.lede {
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0.5rem 0 0;
+}
+
+.signal-label,
+.stat-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.signal-card strong,
+.stat-card strong {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  color: var(--text);
+}
+
+.signal-subtle,
+.stat-subtle,
+.panel-meta {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-card {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 0.75rem;
+}
+
+.chart-panel svg {
+  width: 100%;
+  height: 220px;
+  display: block;
+  border-radius: 0.5rem;
+  background: var(--surface-strong);
+}
+
+.table-wrap {
+  overflow: auto;
+  border-radius: 0.75rem;
+  border: 1px solid var(--line);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+th,
+td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+
+th {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--surface-strong);
+}
+
+tbody tr:hover {
+  background: rgba(226, 0, 116, 0.03);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pill.ok {
+  color: #065f46;
+  background: #d1fae5;
+}
+
+.pill.fail {
+  color: #9f1239;
+  background: #ffe4e6;
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .panel-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

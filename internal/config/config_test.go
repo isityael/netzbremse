@@ -112,6 +112,20 @@ func TestLoadMeasurement(t *testing.T) {
 		}
 	})
 
+	t.Run("invalid timeout", func(t *testing.T) {
+		t.Setenv("NETZBREMSE_MEASUREMENT_INTERVAL", "")
+		t.Setenv("NETZBREMSE_MEASUREMENT_LISTEN_ADDR", "")
+		t.Setenv("NETZBREMSE_IMPORT_DIR", "")
+		t.Setenv("NETZBREMSE_ENDPOINT", "")
+		t.Setenv("NETZBREMSE_SPEEDTEST_COMMAND", "")
+		t.Setenv("NETZBREMSE_SPEEDTEST_TIMEOUT", "not-a-duration")
+
+		_, err := LoadMeasurement()
+		if err == nil {
+			t.Fatal("expected error for invalid timeout")
+		}
+	})
+
 	t.Run("custom values", func(t *testing.T) {
 		t.Setenv("NETZBREMSE_MEASUREMENT_INTERVAL", "15m")
 		t.Setenv("NETZBREMSE_MEASUREMENT_LISTEN_ADDR", ":9090")

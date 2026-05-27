@@ -1,5 +1,6 @@
 FROM dhi.io/golang:1.26.3-alpine3.23-dev@sha256:8c3d2807b83482ee8736d45c43239b8bfb2319837f22a87e56e20184299c94a7 AS builder
 
+ARG TARGETOS=linux
 ARG TARGETARCH=amd64
 
 WORKDIR /src
@@ -9,14 +10,14 @@ RUN go mod download
 
 COPY cmd/measurement ./cmd/measurement
 COPY internal ./internal
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -trimpath -ldflags="-s -w" -o /out/netzbremse-measurement ./cmd/measurement
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags="-s -w" -o /out/netzbremse-measurement ./cmd/measurement
 
 FROM dhi.io/node:26.2-alpine3.23-dev@sha256:88d721c72f82cc1522b4900750bdc7cc7191e73d5b9b5343d8e970ef4a3cf5d1 AS node-deps
 
 WORKDIR /app
 COPY package.json package-lock.json /app/
 ENV PUPPETEER_SKIP_DOWNLOAD=true
-RUN npm ci --omit=dev --no-audit --no-fund \
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
   && npm cache clean --force
 
 # Use the Debian-based DHI runtime so we stay on the hardened image track while
