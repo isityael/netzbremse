@@ -2,7 +2,7 @@ module github.com/yaelmoshi/netzbremse
 
 go 1.26.2
 
-require github.com/jackc/pgx/v5 v5.9.2
+require github.com/jackc/pgx/v5 v5.10.0
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
