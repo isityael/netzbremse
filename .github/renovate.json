@@ -19,15 +19,27 @@
   "packageRules": [
     {
       "matchManagers": ["gomod"],
-      "addLabels": ["go"]
+      "addLabels": ["go"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
     },
     {
       "matchManagers": ["npm"],
-      "addLabels": ["npm"]
+      "addLabels": ["npm"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["dockerfile", "woodpecker"],
-      "addLabels": ["docker"]
+      "matchManagers": ["dockerfile"],
+      "addLabels": ["docker"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchManagers": ["woodpecker"],
+      "addLabels": ["docker"],
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "deps"
     },
     {
       "matchManagers": ["github-actions"],
