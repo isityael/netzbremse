@@ -36,8 +36,8 @@ security vulnerabilities.
 
 Use GitHub's private vulnerability reporting for this repository:
 
-- **Private report**: <https://github.com/yaelmoshi/netzbremse/security/advisories/new>
-- **Security advisories**: <https://github.com/yaelmoshi/netzbremse/security/advisories>
+- **Private report**: <https://github.com/isityael/netzbremse/security/advisories/new>
+- **Security advisories**: <https://github.com/isityael/netzbremse/security/advisories>
 
 If your finding involves leaked credentials, tokens, or other active secrets,
 please say so clearly in the report so containment and rotation can begin

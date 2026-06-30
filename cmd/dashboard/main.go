@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yaelmoshi/netzbremse/internal/config"
-	"github.com/yaelmoshi/netzbremse/internal/postgres"
+	"github.com/isityael/netzbremse/internal/config"
+	"github.com/isityael/netzbremse/internal/postgres"
 )
 
 //go:embed static/*
