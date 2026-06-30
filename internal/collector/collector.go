@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yaelmoshi/netzbremse/internal/config"
-	"github.com/yaelmoshi/netzbremse/internal/model"
-	"github.com/yaelmoshi/netzbremse/internal/postgres"
+	"github.com/isityael/netzbremse/internal/config"
+	"github.com/isityael/netzbremse/internal/model"
+	"github.com/isityael/netzbremse/internal/postgres"
 )
 
 func Run(ctx context.Context, cfg config.Measurement) (model.Measurement, error) {
