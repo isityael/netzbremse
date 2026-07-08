@@ -76,7 +76,7 @@ steps:
 
   # ── Trivy scan (parallel, each after its own build) ────────────────
   - name: trivy-scan-measurement
-    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:bcf73f601798dcfa74c9d3a8ddd3cf596023fb6b30bd8d7b114c2610cbd03a8b
+    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:b69a18eb8cbe529ab12bd2d724262c7178ef703c74d05b71c8cb20ed09e7d554
     depends_on:
       - build-and-push-measurement
     environment:
@@ -91,7 +91,7 @@ steps:
       - trivy image --format cosign-vuln --output measurement.vuln.json $${IMAGE_REF}
 
   - name: trivy-scan-dashboard
-    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:bcf73f601798dcfa74c9d3a8ddd3cf596023fb6b30bd8d7b114c2610cbd03a8b
+    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:b69a18eb8cbe529ab12bd2d724262c7178ef703c74d05b71c8cb20ed09e7d554
     depends_on:
       - build-and-push-dashboard
     environment:
@@ -185,7 +185,7 @@ steps:
 
   # ── Mirror to Harbor (parallel, each after its own GHCR sign) ──────
   - name: mirror-measurement-to-harbor
-    image: dhi.io/crane:0.21.7-debian13-dev@sha256:4810294e79d3d8f102dd2eb9be16615a1502c894fd69229813f64c556559bb25
+    image: dhi.io/crane:0.21.7-debian13-dev@sha256:1c5762c894e6cf8ffbc8d1c8de7ee9fb06ed241080f4a7ac899a33b1d9097ccf
     depends_on:
       - cosign-sign-measurement-ghcr
     environment:
@@ -206,7 +206,7 @@ steps:
       - crane cp "$SRC_IMAGE" "harbor.m0sh1.cc/apps/netzbremse-measurement:latest"
 
   - name: mirror-dashboard-to-harbor
-    image: dhi.io/crane:0.21.7-debian13-dev@sha256:4810294e79d3d8f102dd2eb9be16615a1502c894fd69229813f64c556559bb25
+    image: dhi.io/crane:0.21.7-debian13-dev@sha256:1c5762c894e6cf8ffbc8d1c8de7ee9fb06ed241080f4a7ac899a33b1d9097ccf
     depends_on:
       - cosign-sign-dashboard-ghcr
     environment:
