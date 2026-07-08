@@ -25,7 +25,7 @@ steps:
         - .npm-cache
 
   - name: go-test
-    image: dhi.io/golang:1.26.4-debian13-dev@sha256:69c8fbc3f16f53e69cedebcf97a644b4e63e5ef778854ab366467271f2a2bef2
+    image: dhi.io/golang:1.26.5-debian13-dev@sha256:c1e3b4609107fb36e6b5edfc02f70fa39c161a81d88287ebde57dd0a803b2c06
     environment:
       GOMODCACHE: /woodpecker/src/git.m0sh1.cc/m0sh1/netzbremse/.go-mod-cache
     commands:
@@ -33,12 +33,12 @@ steps:
       - go test ./...
 
   - name: browser-script-check
-    image: dhi.io/node:26.4.0-0-debian13-dev@sha256:0f52e8901797d837f6586d7ece8a524f68ee07f536f6bf130ec5dd0d864013dd
+    image: dhi.io/node:26.4.0-0-debian13-dev@sha256:cc9b8396d0b198a1c251037c3e13017fa1bbb941ec8c00aeb2fef2de5fd3b71f
     commands:
       - node --check scripts/netzbremse-browser.mjs
 
   - name: release
-    image: dhi.io/node:26.4.0-0-debian13-dev@sha256:0f52e8901797d837f6586d7ece8a524f68ee07f536f6bf130ec5dd0d864013dd
+    image: dhi.io/node:26.4.0-0-debian13-dev@sha256:cc9b8396d0b198a1c251037c3e13017fa1bbb941ec8c00aeb2fef2de5fd3b71f
     when:
       - event: push
         branch: main
