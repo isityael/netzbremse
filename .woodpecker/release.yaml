@@ -277,7 +277,7 @@ steps:
 
   # ── Notation sign Harbor (parallel, each after its own cosign) ─────
   - name: notation-sign-measurement-harbor
-    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:2082fcc62b36d9cc3d65ddde882522db54e7978f09245a771edeb31b328f87e8
+    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:8d1750d6de9891a15364341206b11f552f6a118032a8be44ceb43ab4f570f28d
     depends_on:
       - cosign-sign-measurement-harbor
     environment:
@@ -303,7 +303,7 @@ steps:
       - rm -rf /tmp/notation $HOME/.docker/config.json
 
   - name: notation-sign-dashboard-harbor
-    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:2082fcc62b36d9cc3d65ddde882522db54e7978f09245a771edeb31b328f87e8
+    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:8d1750d6de9891a15364341206b11f552f6a118032a8be44ceb43ab4f570f28d
     depends_on:
       - cosign-sign-dashboard-harbor
     environment:
