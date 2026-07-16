@@ -6,7 +6,7 @@ when:
 steps:
   - name: restore-cache
     failure: ignore
-    image: plugins/cache:1.10@sha256:a08f70938c15ba3bb8c0f2453700d3dc1022e0a617c26eac0180d9a03e25ec43
+    image: plugins/cache:1.10@sha256:6a5cf9cf3813e9b5a554f56dbc9c073cb24463b7bddd5b10e25790d732e68938
     settings:
       access_key:
         from_secret: garage_s3_access_key
@@ -25,7 +25,7 @@ steps:
         - .npm-cache
 
   - name: go-test
-    image: dhi.io/golang:1.26.5-debian13-dev@sha256:9055e3d075abbf69407899d716ba000d5bf0767cafedb31a49278cb3eace18c9
+    image: dhi.io/golang:1.26.5-debian13-dev@sha256:ae1f6a80aec9e82d8431115d9148f4c8e932efe04d706a51a30a5c0609a72ab9
     environment:
       GOMODCACHE: /woodpecker/src/git.m0sh1.cc/m0sh1/netzbremse/.go-mod-cache
     commands:
@@ -33,12 +33,12 @@ steps:
       - go test ./...
 
   - name: browser-script-check
-    image: dhi.io/node:26.5.0-0-debian13-dev@sha256:ec091624ff69479647626dd5f7010ad86172304da3bbdb1972a4ae41908f866d
+    image: dhi.io/node:26.5.0-0-debian13-dev@sha256:728bf5fbed66fdcbe3474b5fb343a1480ee093dfd4da6dd5afaf5337ac66150c
     commands:
       - node --check scripts/netzbremse-browser.mjs
 
   - name: release
-    image: dhi.io/node:26.5.0-0-debian13-dev@sha256:ec091624ff69479647626dd5f7010ad86172304da3bbdb1972a4ae41908f866d
+    image: dhi.io/node:26.5.0-0-debian13-dev@sha256:728bf5fbed66fdcbe3474b5fb343a1480ee093dfd4da6dd5afaf5337ac66150c
     when:
       - event: push
         branch: main
@@ -70,7 +70,7 @@ steps:
 
   - name: rebuild-cache
     failure: ignore
-    image: plugins/cache:1.10@sha256:a08f70938c15ba3bb8c0f2453700d3dc1022e0a617c26eac0180d9a03e25ec43
+    image: plugins/cache:1.10@sha256:6a5cf9cf3813e9b5a554f56dbc9c073cb24463b7bddd5b10e25790d732e68938
     settings:
       access_key:
         from_secret: garage_s3_access_key
