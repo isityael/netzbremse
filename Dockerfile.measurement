@@ -25,6 +25,8 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 # netzbremse.de speed page.
 FROM dhi.io/node:26.5.0-0-debian13-dev@sha256:728bf5fbed66fdcbe3474b5fb343a1480ee093dfd4da6dd5afaf5337ac66150c
 
+ARG SECURITY_REFRESH=2026-07-23
+
 LABEL org.opencontainers.image.source="https://git.m0sh1.cc/m0sh1/netzbremse" \
   org.opencontainers.image.url="https://git.m0sh1.cc/m0sh1/netzbremse" \
   org.opencontainers.image.title="netzbremse-measurement" \
@@ -34,7 +36,8 @@ LABEL org.opencontainers.image.source="https://git.m0sh1.cc/m0sh1/netzbremse" \
 # Debian base, avoids Alpine's renderer regression, and works on both amd64 and
 # arm64, unlike Chrome for Testing.
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
+RUN echo "Security refresh: ${SECURITY_REFRESH}" \
+  && apt-get update \
   && apt-get install -y --no-install-recommends \
     ca-certificates chromium fonts-liberation \
   && rm -rf /var/lib/apt/lists/*
