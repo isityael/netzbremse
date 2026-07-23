@@ -12,6 +12,7 @@
     "github-actions",
     "woodpecker"
   ],
+  "semanticCommits": "enabled",
   "lockFileMaintenance": {
     "enabled": true,
     "groupName": "lock file maintenance"
