@@ -1,4 +1,4 @@
-FROM dhi.io/golang:1.26.5-alpine3.24-dev@sha256:1f9884b58f1e2ef04a4e5fccba014b0b988d6ec04989ba00e61ed1ec38221f79 AS builder
+FROM dhi.io/golang:1.26.5-alpine3.24-dev@sha256:29fe0a7d2a5ab0c236fbde3a7f63801755585ed260b6f2f564e831c92bfa9f34 AS builder
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
@@ -12,7 +12,7 @@ COPY cmd/measurement ./cmd/measurement
 COPY internal ./internal
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags="-s -w" -o /out/netzbremse-measurement ./cmd/measurement
 
-FROM dhi.io/node:26.5.0-alpine3.24-dev@sha256:170a075c44c9e9bf511ab02edd40fb63460bc91da594c01923c5649964c01c60 AS node-deps
+FROM dhi.io/node:26.5.1-alpine3.24-dev@sha256:3fe65246872bb2eabd5cb5957f6081358403621ea438d565a11ae91c6564d1ac AS node-deps
 
 WORKDIR /app
 COPY package.json package-lock.json /app/
@@ -23,7 +23,7 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 # Use the Debian-based DHI runtime so we stay on the hardened image track while
 # avoiding Alpine's musl-compiled Chromium 146 renderer crash on the
 # netzbremse.de speed page.
-FROM dhi.io/node:26.5.0-0-debian13-dev@sha256:728bf5fbed66fdcbe3474b5fb343a1480ee093dfd4da6dd5afaf5337ac66150c
+FROM dhi.io/node:26.5.1-0-debian13-dev@sha256:8ba09adf3b7a9c807811fb0312ebbdfc4b873fe42937f4044174b7e9fed73818
 
 ARG SECURITY_REFRESH=2026-07-23
 
