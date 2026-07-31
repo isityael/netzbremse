@@ -128,7 +128,7 @@ steps:
 
   # ── Cosign sign GHCR (parallel, each after its own SBOM) ──────────
   - name: cosign-sign-measurement-ghcr
-    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:28bd97f1efc751593b4d75d4d92880353bf77ee43f8db391f704b699b7cce43e
+    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:9698ed2b29667b7ee83b585959aaf87c9fd21a2a46f1a856b214ff51fd11937c
     depends_on:
       - sbom-generate-measurement
     environment:
@@ -152,7 +152,7 @@ steps:
       - rm -f /tmp/cosign.key /tmp/cosign-signing-config.json
 
   - name: cosign-sign-dashboard-ghcr
-    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:28bd97f1efc751593b4d75d4d92880353bf77ee43f8db391f704b699b7cce43e
+    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:9698ed2b29667b7ee83b585959aaf87c9fd21a2a46f1a856b214ff51fd11937c
     depends_on:
       - sbom-generate-dashboard
     environment:
@@ -226,7 +226,7 @@ steps:
 
   # ── Cosign sign Harbor (parallel, each after its own mirror) ───────
   - name: cosign-sign-measurement-harbor
-    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:28bd97f1efc751593b4d75d4d92880353bf77ee43f8db391f704b699b7cce43e
+    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:9698ed2b29667b7ee83b585959aaf87c9fd21a2a46f1a856b214ff51fd11937c
     depends_on:
       - mirror-measurement-to-harbor
     environment:
@@ -250,7 +250,7 @@ steps:
       - rm -f /tmp/cosign.key /tmp/cosign-signing-config.json measurement.sbom.spdx.json measurement.vuln.json
 
   - name: cosign-sign-dashboard-harbor
-    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:28bd97f1efc751593b4d75d4d92880353bf77ee43f8db391f704b699b7cce43e
+    image: dhi.io/cosign:3.1.2-alpine3.24-dev@sha256:9698ed2b29667b7ee83b585959aaf87c9fd21a2a46f1a856b214ff51fd11937c
     depends_on:
       - mirror-dashboard-to-harbor
     environment:
@@ -275,7 +275,7 @@ steps:
 
   # ── Notation sign Harbor (parallel, each after its own cosign) ─────
   - name: notation-sign-measurement-harbor
-    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:6c96b512d8ff3134e890797734120047dabfefa167cc8c89f87c811b499731b3
+    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:3a3143f19a06b008ed4e8802000869850694ae68da4fa3e51150cafb7fa26e1b
     depends_on:
       - cosign-sign-measurement-harbor
     environment:
@@ -301,7 +301,7 @@ steps:
       - rm -rf /tmp/notation $HOME/.docker/config.json
 
   - name: notation-sign-dashboard-harbor
-    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:6c96b512d8ff3134e890797734120047dabfefa167cc8c89f87c811b499731b3
+    image: dhi.io/notation:1.3.2-alpine3.24-dev@sha256:3a3143f19a06b008ed4e8802000869850694ae68da4fa3e51150cafb7fa26e1b
     depends_on:
       - cosign-sign-dashboard-harbor
     environment:
