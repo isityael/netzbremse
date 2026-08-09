@@ -9,7 +9,7 @@ variables:
 steps:
   # ── Build (parallel) ───────────────────────────────────────────────
   - name: build-and-push-measurement
-    image: woodpeckerci/plugin-docker-buildx@sha256:5856c4209f2f3428bc6e9012c67aefd7d9d5f1b351626d33a859ae59ceb2791d
+    image: woodpeckerci/plugin-docker-buildx@sha256:827ea382cfcc021f2b703f9e4ad63a49042eb0ba57701f98708e19b3cd77a1b6
     settings:
       registry: ghcr.io
       repo: *measurement_image
@@ -38,7 +38,7 @@ steps:
       cache_to: 'type=registry,ref=harbor.m0sh1.cc/cache/netzbremse-measurement:buildcache,mode=max,ignore-error=true'
 
   - name: build-and-push-dashboard
-    image: woodpeckerci/plugin-docker-buildx@sha256:5856c4209f2f3428bc6e9012c67aefd7d9d5f1b351626d33a859ae59ceb2791d
+    image: woodpeckerci/plugin-docker-buildx@sha256:827ea382cfcc021f2b703f9e4ad63a49042eb0ba57701f98708e19b3cd77a1b6
     settings:
       registry: ghcr.io
       repo: *dashboard_image
@@ -68,7 +68,7 @@ steps:
 
   # ── Trivy scan (parallel, each after its own build) ────────────────
   - name: trivy-scan-measurement
-    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:111c2d07f6a936c6429f5bb551899cdd662917b754ae5effcdd45c447cb5b5ab
+    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:e44a2d81cefe9c045f522e6e170937153e17357c7b195e82fe44753bbecd243c
     depends_on:
       - build-and-push-measurement
     environment:
@@ -83,7 +83,7 @@ steps:
       - trivy image --format cosign-vuln --output measurement.vuln.json $${IMAGE_REF}
 
   - name: trivy-scan-dashboard
-    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:111c2d07f6a936c6429f5bb551899cdd662917b754ae5effcdd45c447cb5b5ab
+    image: dhi.io/trivy:0.71.2-alpine3.24-dev@sha256:e44a2d81cefe9c045f522e6e170937153e17357c7b195e82fe44753bbecd243c
     depends_on:
       - build-and-push-dashboard
     environment:
