@@ -37,37 +37,6 @@ steps:
     commands:
       - node --check scripts/netzbremse-browser.mjs
 
-  - name: release
-    image: dhi.io/node:26.6.0-0-debian13-dev@sha256:6d6e098c424b244ca7f53d0f870a093c114d051e496b572030d84d16661d1983
-    when:
-      - event: push
-        branch: main
-    environment:
-      npm_config_cache: /woodpecker/src/git.m0sh1.cc/m0sh1/netzbremse/.npm-cache
-      PUPPETEER_SKIP_DOWNLOAD: "true"
-      FORGEJO_USERNAME:
-        from_secret: forgejo_username
-      FORGEJO_TOKEN:
-        from_secret: forgejo_token
-    commands:
-      - |
-        : "$${FORGEJO_USERNAME:?missing Woodpecker secret forgejo_username}"
-        : "$${FORGEJO_TOKEN:?missing Woodpecker secret forgejo_token}"
-      - |
-        [ -n "$APT_PROXY_HOST" ] && echo "Acquire::http::Proxy \"http://$APT_PROXY_HOST:${APT_PROXY_PORT:-3142}\";" > /etc/apt/apt.conf.d/00proxy
-      - apt-get update
-      - apt-get install -y --no-install-recommends git ca-certificates
-      - rm -rf /var/lib/apt/lists/*
-      - rm -f .git/config.lock
-      - git config user.name "woodpecker[bot]"
-      - git config user.email "woodpecker@m0sh1.cc"
-      - git config credential.https://git.m0sh1.cc.username "$FORGEJO_USERNAME"
-      - git config credential.https://git.m0sh1.cc.helper '!f() { echo "password=$${FORGEJO_TOKEN}"; }; f'
-      - git remote set-url origin "https://git.m0sh1.cc/m0sh1/netzbremse.git"
-      - git fetch --tags origin
-      - npm ci
-      - node node_modules/.bin/semantic-release
-
   - name: rebuild-cache
     failure: ignore
     image: plugins/cache:1.10@sha256:6a5cf9cf3813e9b5a554f56dbc9c073cb24463b7bddd5b10e25790d732e68938
