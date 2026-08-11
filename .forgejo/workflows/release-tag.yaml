@@ -1,0 +1,27 @@
+name: Create gated semantic release tag
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: {fetch-depth: 0}
+      - name: Wait for Woodpecker validation
+        env:
+          FORGEJO_API_URL: ${{ github.server_url }}/api/v1
+          FORGEJO_REPOSITORY: ${{ github.repository }}
+          FORGEJO_TOKEN: ${{ github.token }}
+        run: hack/wait-for-woodpecker-success.sh "$GITHUB_SHA" ci/woodpecker/push/build
+      - name: Calculate and create semantic release tag
+        env:
+          GIT_AUTHOR_NAME: forgejo-actions[bot]
+          GIT_AUTHOR_EMAIL: forgejo-actions@m0sh1.cc
+          GIT_COMMITTER_NAME: forgejo-actions[bot]
+          GIT_COMMITTER_EMAIL: forgejo-actions@m0sh1.cc
+        run: |
+          set -eu
+          npm ci --ignore-scripts
+          npx semantic-release
