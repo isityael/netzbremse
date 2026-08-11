@@ -9,7 +9,7 @@ variables:
 steps:
   # ── Build (parallel) ───────────────────────────────────────────────
   - name: build-and-push-measurement
-    image: woodpeckerci/plugin-docker-buildx@sha256:827ea382cfcc021f2b703f9e4ad63a49042eb0ba57701f98708e19b3cd77a1b6
+    image: woodpeckerci/plugin-docker-buildx:6.1.1@sha256:9a22c00b4952e405d11e66d29772edbeb1f7b24f27f71cda251ecb838e725e86
     settings:
       registry: ghcr.io
       repo: *measurement_image
@@ -38,7 +38,7 @@ steps:
       cache_to: 'type=registry,ref=harbor.m0sh1.cc/cache/netzbremse-measurement:buildcache,mode=max,ignore-error=true'
 
   - name: build-and-push-dashboard
-    image: woodpeckerci/plugin-docker-buildx@sha256:827ea382cfcc021f2b703f9e4ad63a49042eb0ba57701f98708e19b3cd77a1b6
+    image: woodpeckerci/plugin-docker-buildx:6.1.1@sha256:9a22c00b4952e405d11e66d29772edbeb1f7b24f27f71cda251ecb838e725e86
     settings:
       registry: ghcr.io
       repo: *dashboard_image
