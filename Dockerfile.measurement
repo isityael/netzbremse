@@ -23,7 +23,7 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 # Use the Debian-based DHI runtime so we stay on the hardened image track while
 # avoiding Alpine's musl-compiled Chromium 146 renderer crash on the
 # netzbremse.de speed page.
-FROM dhi.io/node:26.10.0-0-debian13-dev@sha256:ca70a2e985554a633b4460640157169f1576223dfd858f7e7ad9f990288cdbb0
+FROM dhi.io/node:26.10.0-0-debian13-dev@sha256:4b7d8ec141f0def02547a3f05fdc7ee4b315b1257ff939f4794ae5d215d224ee
 
 ARG SECURITY_REFRESH=2026-07-23
 

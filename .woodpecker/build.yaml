@@ -6,7 +6,7 @@ when:
 steps:
   - name: restore-cache
     failure: ignore
-    image: plugins/cache:1.10@sha256:fa8180c3ba7455577e00207d2d61e321be78987252c52c7d96437c8f3d14c911
+    image: plugins/cache:1.10@sha256:45737fa6c8e3bfc20c9575af8fe474ad9c78f7432a778793876761c53bf9081d
     settings:
       access_key:
         from_secret: garage_s3_access_key
@@ -33,13 +33,13 @@ steps:
       - go test ./...
 
   - name: browser-script-check
-    image: dhi.io/node:26.10.0-0-debian13-dev@sha256:ca70a2e985554a633b4460640157169f1576223dfd858f7e7ad9f990288cdbb0
+    image: dhi.io/node:26.10.0-0-debian13-dev@sha256:4b7d8ec141f0def02547a3f05fdc7ee4b315b1257ff939f4794ae5d215d224ee
     commands:
       - node --check scripts/netzbremse-browser.mjs
 
   - name: rebuild-cache
     failure: ignore
-    image: plugins/cache:1.10@sha256:fa8180c3ba7455577e00207d2d61e321be78987252c52c7d96437c8f3d14c911
+    image: plugins/cache:1.10@sha256:45737fa6c8e3bfc20c9575af8fe474ad9c78f7432a778793876761c53bf9081d
     settings:
       access_key:
         from_secret: garage_s3_access_key
