@@ -10,7 +10,6 @@ steps:
   # ── Build (parallel) ───────────────────────────────────────────────
   - name: build-and-push-measurement
     image: woodpeckerci/plugin-docker-buildx:6.1.2@sha256:d26b69cbe748b8a219c707e7889d5ffb3f9214bc3c480c30fe857ff85954267c
-    privileged: true
     settings:
       registry: ghcr.io
       repo: *measurement_image
@@ -40,7 +39,6 @@ steps:
 
   - name: build-and-push-dashboard
     image: woodpeckerci/plugin-docker-buildx:6.1.2@sha256:d26b69cbe748b8a219c707e7889d5ffb3f9214bc3c480c30fe857ff85954267c
-    privileged: true
     settings:
       registry: ghcr.io
       repo: *dashboard_image
