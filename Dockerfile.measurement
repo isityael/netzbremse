@@ -1,4 +1,4 @@
-FROM dhi.io/golang:1.27.1-alpine3.24-dev@sha256:89778e746908997996f8e1de415d9834154eac97a43298ea54bdb74f78116430 AS builder
+FROM dhi.io/golang:1.27.1-alpine3.24-dev@sha256:c064f917ac262a07d24d3255eeeb57bd5d96d24218897d1d81edd35e9f411f45 AS builder
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
@@ -23,7 +23,7 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 # Use the Debian-based DHI runtime so we stay on the hardened image track while
 # avoiding Alpine's musl-compiled Chromium 146 renderer crash on the
 # netzbremse.de speed page.
-FROM dhi.io/node:26.10.0-0-debian13-dev@sha256:989bf83884f9a8197fffbf981b5304ff0e5a79870bce63fc279930b7ab07a4fc
+FROM dhi.io/node:26.10.0-0-debian13-dev@sha256:068e97d2850e4977064f066c39eea68d4633acfcdeacb96c91592bfefcb2c0df
 
 ARG SECURITY_REFRESH=2026-07-23
 
