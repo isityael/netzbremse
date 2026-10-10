@@ -1,4 +1,4 @@
-FROM dhi.io/golang:1.27.1-alpine3.24-dev@sha256:c064f917ac262a07d24d3255eeeb57bd5d96d24218897d1d81edd35e9f411f45 AS builder
+FROM dhi.io/golang:1.27.2-alpine3.24-dev@sha256:9a9160e3c89a37572e35271c65a2b38a2d1671c8ab0d6abee19ce3d6cecb9be9 AS builder
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
