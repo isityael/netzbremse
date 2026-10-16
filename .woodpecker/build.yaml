@@ -33,7 +33,7 @@ steps:
       - go test ./...
 
   - name: browser-script-check
-    image: dhi.io/node:26.11.1-0-debian13-dev@sha256:be69febce9bc4c7546c4164a352dcff58b44c9172f70b31ab5e478e085e18167
+    image: dhi.io/node:26.12.0-0-debian13-dev@sha256:0f2693c8869e64ce84115fc6ae53b5d440049979cc9ffe053cc4678077e20980
     commands:
       - node --check scripts/netzbremse-browser.mjs
 
