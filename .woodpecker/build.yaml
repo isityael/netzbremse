@@ -25,7 +25,7 @@ steps:
         - .npm-cache
 
   - name: go-test
-    image: dhi.io/golang:1.27.2-debian13-dev@sha256:161ddbe786e8efdca83c5218312d1343c6ad84332929f4df4b2b7c4fa66daebf
+    image: dhi.io/golang:1.27.3-debian13-dev@sha256:ee3c6f62caf5e719259cf9e74aa48d50647c60b92df57ba9a48c8ed50a37aab9
     environment:
       GOMODCACHE: /woodpecker/src/git.m0sh1.cc/m0sh1/netzbremse/.go-mod-cache
     commands:
