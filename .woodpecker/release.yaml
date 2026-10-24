@@ -99,7 +99,7 @@ steps:
 
   # ── SBOM generation (parallel, each after its own scan) ────────────
   - name: sbom-generate-measurement
-    image: dhi.io/syft:1.54.1-alpine3.24-dev@sha256:ff1692e6526699b08a236a3caa3558051e779179a346c6e9c9be6e40ad62e648
+    image: dhi.io/syft:1.55.0-alpine3.24-dev@sha256:07ba35f1c45a0dc2077fb8e920f9d2244e5b111155ae54be8b2d6cffc74395cd
     depends_on:
       - trivy-scan-measurement
     environment:
@@ -113,7 +113,7 @@ steps:
       - syft registry:$${IMAGE_REF} -o spdx-json > measurement.sbom.spdx.json
 
   - name: sbom-generate-dashboard
-    image: dhi.io/syft:1.54.1-alpine3.24-dev@sha256:ff1692e6526699b08a236a3caa3558051e779179a346c6e9c9be6e40ad62e648
+    image: dhi.io/syft:1.55.0-alpine3.24-dev@sha256:07ba35f1c45a0dc2077fb8e920f9d2244e5b111155ae54be8b2d6cffc74395cd
     depends_on:
       - trivy-scan-dashboard
     environment:
@@ -177,7 +177,7 @@ steps:
 
   # ── Mirror to Harbor (parallel, each after its own GHCR sign) ──────
   - name: mirror-measurement-to-harbor
-    image: dhi.io/crane:0.21.9-debian13-dev@sha256:5bfcd75bed71149f815c427030d89dfb861b0bc3f07f93f41c000bd3c9bde8eb
+    image: dhi.io/crane:0.22.1-debian13-dev@sha256:82b1dc28811889cba5bcab21f599349347944a11faee62dcd5cfc43b16d28838
     depends_on:
       - cosign-sign-measurement-ghcr
     environment:
@@ -201,7 +201,7 @@ steps:
       - crane cp "$SRC_IMAGE" "harbor.m0sh1.cc/apps/netzbremse-measurement:latest"
 
   - name: mirror-dashboard-to-harbor
-    image: dhi.io/crane:0.21.9-debian13-dev@sha256:5bfcd75bed71149f815c427030d89dfb861b0bc3f07f93f41c000bd3c9bde8eb
+    image: dhi.io/crane:0.22.1-debian13-dev@sha256:82b1dc28811889cba5bcab21f599349347944a11faee62dcd5cfc43b16d28838
     depends_on:
       - cosign-sign-dashboard-ghcr
     environment:
