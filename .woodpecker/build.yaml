@@ -6,7 +6,7 @@ when:
 steps:
   - name: restore-cache
     failure: ignore
-    image: plugins/cache:1.10@sha256:25f4dbe6f0e05e39778387065a6d46dd6d74b2c569a68eaceedb649afd18f9d5
+    image: plugins/cache:1.10@sha256:88b224cffadce91b81d86ed6a20cc1111d7ea02566ce3482b1f4f6445095d61c
     settings:
       access_key:
         from_secret: garage_s3_access_key
@@ -25,7 +25,7 @@ steps:
         - .npm-cache
 
   - name: go-test
-    image: dhi.io/golang:1.27.3-debian13-dev@sha256:ee3c6f62caf5e719259cf9e74aa48d50647c60b92df57ba9a48c8ed50a37aab9
+    image: dhi.io/golang:1.27.3-debian13-dev@sha256:648c1e59a6bb06911d925436caf05f5a1d21d026802553b9ceb9b8bc8031c9de
     environment:
       GOMODCACHE: /woodpecker/src/git.m0sh1.cc/m0sh1/netzbremse/.go-mod-cache
     commands:
@@ -39,7 +39,7 @@ steps:
 
   - name: rebuild-cache
     failure: ignore
-    image: plugins/cache:1.10@sha256:25f4dbe6f0e05e39778387065a6d46dd6d74b2c569a68eaceedb649afd18f9d5
+    image: plugins/cache:1.10@sha256:88b224cffadce91b81d86ed6a20cc1111d7ea02566ce3482b1f4f6445095d61c
     settings:
       access_key:
         from_secret: garage_s3_access_key
