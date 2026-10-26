@@ -3,15 +3,16 @@ when:
     ref: refs/tags/v*
 
 variables:
-  - &measurement_image "ghcr.io/isityael/netzbremse-measurement"
-  - &dashboard_image "ghcr.io/isityael/netzbremse-dashboard"
+  - &measurement_image "git.m0sh1.cc/isityael/netzbremse-measurement"
+  - &dashboard_image "git.m0sh1.cc/isityael/netzbremse-dashboard"
 
 steps:
   # ── Build (parallel) ───────────────────────────────────────────────
   - name: build-and-push-measurement
     image: woodpeckerci/plugin-docker-buildx:6.1.2@sha256:d26b69cbe748b8a219c707e7889d5ffb3f9214bc3c480c30fe857ff85954267c
+    privileged: true
     settings:
-      registry: ghcr.io
+      registry: git.m0sh1.cc
       repo: *measurement_image
       context: .
       dockerfile: Dockerfile.measurement
@@ -30,17 +31,18 @@ steps:
       tags:
         - "candidate-${CI_COMMIT_TAG##v}"
       username:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       password:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
       provenance: mode=max
       cache_from: 'type=registry\,ref=harbor.m0sh1.cc/cache/netzbremse-measurement:buildcache'
       cache_to: 'type=registry,ref=harbor.m0sh1.cc/cache/netzbremse-measurement:buildcache,mode=max,ignore-error=true'
 
   - name: build-and-push-dashboard
     image: woodpeckerci/plugin-docker-buildx:6.1.2@sha256:d26b69cbe748b8a219c707e7889d5ffb3f9214bc3c480c30fe857ff85954267c
+    privileged: true
     settings:
-      registry: ghcr.io
+      registry: git.m0sh1.cc
       repo: *dashboard_image
       context: .
       dockerfile: Dockerfile.dashboard
@@ -59,9 +61,9 @@ steps:
       tags:
         - "candidate-${CI_COMMIT_TAG##v}"
       username:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       password:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
       provenance: mode=max
       cache_from: 'type=registry\,ref=harbor.m0sh1.cc/cache/netzbremse-dashboard:buildcache'
       cache_to: 'type=registry,ref=harbor.m0sh1.cc/cache/netzbremse-dashboard:buildcache,mode=max,ignore-error=true'
@@ -72,11 +74,11 @@ steps:
     depends_on:
       - build-and-push-measurement
     environment:
-      IMAGE_REF: "ghcr.io/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "git.m0sh1.cc/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
       TRIVY_USERNAME:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       TRIVY_PASSWORD:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
     commands:
       - trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed $${IMAGE_REF}
       - trivy image --exit-code 0 --severity HIGH --ignore-unfixed $${IMAGE_REF}
@@ -87,11 +89,11 @@ steps:
     depends_on:
       - build-and-push-dashboard
     environment:
-      IMAGE_REF: "ghcr.io/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "git.m0sh1.cc/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
       TRIVY_USERNAME:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       TRIVY_PASSWORD:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
     commands:
       - trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed $${IMAGE_REF}
       - trivy image --exit-code 0 --severity HIGH --ignore-unfixed $${IMAGE_REF}
@@ -103,12 +105,12 @@ steps:
     depends_on:
       - trivy-scan-measurement
     environment:
-      IMAGE_REF: "ghcr.io/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
-      SYFT_REGISTRY_AUTH_AUTHORITY: ghcr.io
+      IMAGE_REF: "git.m0sh1.cc/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
+      SYFT_REGISTRY_AUTH_AUTHORITY: git.m0sh1.cc
       SYFT_REGISTRY_AUTH_USERNAME:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       SYFT_REGISTRY_AUTH_PASSWORD:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
     commands:
       - syft registry:$${IMAGE_REF} -o spdx-json > measurement.sbom.spdx.json
 
@@ -117,59 +119,59 @@ steps:
     depends_on:
       - trivy-scan-dashboard
     environment:
-      IMAGE_REF: "ghcr.io/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
-      SYFT_REGISTRY_AUTH_AUTHORITY: ghcr.io
+      IMAGE_REF: "git.m0sh1.cc/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
+      SYFT_REGISTRY_AUTH_AUTHORITY: git.m0sh1.cc
       SYFT_REGISTRY_AUTH_USERNAME:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       SYFT_REGISTRY_AUTH_PASSWORD:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
     commands:
       - syft registry:$${IMAGE_REF} -o spdx-json > dashboard.sbom.spdx.json
 
   # ── Cosign sign GHCR (parallel, each after its own SBOM) ──────────
-  - name: cosign-sign-measurement-ghcr
+  - name: cosign-sign-measurement-forgejo
     image: dhi.io/cosign:3.1.3-alpine3.24-dev@sha256:4ec09d39ad7b17288c146d929404d30ab3738976760b0422e4e1e37033be6c98
     depends_on:
       - sbom-generate-measurement
     environment:
-      IMAGE_REF: "ghcr.io/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "git.m0sh1.cc/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
       COSIGN_EXPERIMENTAL: "1"
       COSIGN_KEY:
         from_secret: cosign_key
       COSIGN_PASSWORD:
         from_secret: cosign_password
       REGISTRY_USERNAME:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       REGISTRY_PASSWORD:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
     commands:
       - echo "$COSIGN_KEY" > /tmp/cosign.key
       - cosign signing-config create --no-default-rekor --no-default-tsa --no-default-fulcio --no-default-oidc --out /tmp/cosign-signing-config.json
-      - cosign login ghcr.io -u "$REGISTRY_USERNAME" -p "$REGISTRY_PASSWORD"
+      - cosign login git.m0sh1.cc -u "$REGISTRY_USERNAME" -p "$REGISTRY_PASSWORD"
       - cosign sign --key /tmp/cosign.key --yes --signing-config /tmp/cosign-signing-config.json --registry-referrers-mode=oci-1-1 $${IMAGE_REF}
       - cosign attest --key /tmp/cosign.key --type spdxjson --predicate measurement.sbom.spdx.json --yes --signing-config /tmp/cosign-signing-config.json $${IMAGE_REF}
       - cosign attest --key /tmp/cosign.key --type vuln --predicate measurement.vuln.json --yes --signing-config /tmp/cosign-signing-config.json $${IMAGE_REF}
       - rm -f /tmp/cosign.key /tmp/cosign-signing-config.json
 
-  - name: cosign-sign-dashboard-ghcr
+  - name: cosign-sign-dashboard-forgejo
     image: dhi.io/cosign:3.1.3-alpine3.24-dev@sha256:4ec09d39ad7b17288c146d929404d30ab3738976760b0422e4e1e37033be6c98
     depends_on:
       - sbom-generate-dashboard
     environment:
-      IMAGE_REF: "ghcr.io/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
+      IMAGE_REF: "git.m0sh1.cc/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
       COSIGN_EXPERIMENTAL: "1"
       COSIGN_KEY:
         from_secret: cosign_key
       COSIGN_PASSWORD:
         from_secret: cosign_password
       REGISTRY_USERNAME:
-        from_secret: github_username
+        from_secret: forgejo_public_package_username
       REGISTRY_PASSWORD:
-        from_secret: github_token
+        from_secret: forgejo_public_package_token
     commands:
       - echo "$COSIGN_KEY" > /tmp/cosign.key
       - cosign signing-config create --no-default-rekor --no-default-tsa --no-default-fulcio --no-default-oidc --out /tmp/cosign-signing-config.json
-      - cosign login ghcr.io -u "$REGISTRY_USERNAME" -p "$REGISTRY_PASSWORD"
+      - cosign login git.m0sh1.cc -u "$REGISTRY_USERNAME" -p "$REGISTRY_PASSWORD"
       - cosign sign --key /tmp/cosign.key --yes --signing-config /tmp/cosign-signing-config.json --registry-referrers-mode=oci-1-1 $${IMAGE_REF}
       - cosign attest --key /tmp/cosign.key --type spdxjson --predicate dashboard.sbom.spdx.json --yes --signing-config /tmp/cosign-signing-config.json $${IMAGE_REF}
       - cosign attest --key /tmp/cosign.key --type vuln --predicate dashboard.vuln.json --yes --signing-config /tmp/cosign-signing-config.json $${IMAGE_REF}
@@ -179,48 +181,48 @@ steps:
   - name: mirror-measurement-to-harbor
     image: dhi.io/crane:0.22.1-debian13-dev@sha256:82b1dc28811889cba5bcab21f599349347944a11faee62dcd5cfc43b16d28838
     depends_on:
-      - cosign-sign-measurement-ghcr
+      - cosign-sign-measurement-forgejo
     environment:
-      SRC_IMAGE: "ghcr.io/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
-      GHCR_IMAGE: "ghcr.io/isityael/netzbremse-measurement:${CI_COMMIT_TAG##v}"
+      SRC_IMAGE: "git.m0sh1.cc/isityael/netzbremse-measurement:candidate-${CI_COMMIT_TAG##v}"
+      FORGEJO_IMAGE: "git.m0sh1.cc/isityael/netzbremse-measurement:${CI_COMMIT_TAG##v}"
       DST_IMAGE: "harbor.m0sh1.cc/apps/netzbremse-measurement:${CI_COMMIT_TAG##v}"
-      GHCR_USERNAME:
-        from_secret: github_username
-      GHCR_PASSWORD:
-        from_secret: github_token
+      FORGEJO_USERNAME:
+        from_secret: forgejo_public_package_username
+      FORGEJO_PASSWORD:
+        from_secret: forgejo_public_package_token
       HARBOR_USERNAME:
         from_secret: harbor_username
       HARBOR_PASSWORD:
         from_secret: harbor_password
     commands:
-      - crane auth login ghcr.io -u "$GHCR_USERNAME" -p "$GHCR_PASSWORD"
+      - crane auth login git.m0sh1.cc -u "$FORGEJO_USERNAME" -p "$FORGEJO_PASSWORD"
       - crane auth login harbor.m0sh1.cc -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD"
-      - crane cp "$SRC_IMAGE" "$GHCR_IMAGE"
-      - crane cp "$SRC_IMAGE" "ghcr.io/isityael/netzbremse-measurement:latest"
+      - crane cp "$SRC_IMAGE" "$FORGEJO_IMAGE"
+      - crane cp "$SRC_IMAGE" "git.m0sh1.cc/isityael/netzbremse-measurement:latest"
       - crane cp "$SRC_IMAGE" "$DST_IMAGE"
       - crane cp "$SRC_IMAGE" "harbor.m0sh1.cc/apps/netzbremse-measurement:latest"
 
   - name: mirror-dashboard-to-harbor
     image: dhi.io/crane:0.22.1-debian13-dev@sha256:82b1dc28811889cba5bcab21f599349347944a11faee62dcd5cfc43b16d28838
     depends_on:
-      - cosign-sign-dashboard-ghcr
+      - cosign-sign-dashboard-forgejo
     environment:
-      SRC_IMAGE: "ghcr.io/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
-      GHCR_IMAGE: "ghcr.io/isityael/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
+      SRC_IMAGE: "git.m0sh1.cc/isityael/netzbremse-dashboard:candidate-${CI_COMMIT_TAG##v}"
+      FORGEJO_IMAGE: "git.m0sh1.cc/isityael/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
       DST_IMAGE: "harbor.m0sh1.cc/apps/netzbremse-dashboard:${CI_COMMIT_TAG##v}"
-      GHCR_USERNAME:
-        from_secret: github_username
-      GHCR_PASSWORD:
-        from_secret: github_token
+      FORGEJO_USERNAME:
+        from_secret: forgejo_public_package_username
+      FORGEJO_PASSWORD:
+        from_secret: forgejo_public_package_token
       HARBOR_USERNAME:
         from_secret: harbor_username
       HARBOR_PASSWORD:
         from_secret: harbor_password
     commands:
-      - crane auth login ghcr.io -u "$GHCR_USERNAME" -p "$GHCR_PASSWORD"
+      - crane auth login git.m0sh1.cc -u "$FORGEJO_USERNAME" -p "$FORGEJO_PASSWORD"
       - crane auth login harbor.m0sh1.cc -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD"
-      - crane cp "$SRC_IMAGE" "$GHCR_IMAGE"
-      - crane cp "$SRC_IMAGE" "ghcr.io/isityael/netzbremse-dashboard:latest"
+      - crane cp "$SRC_IMAGE" "$FORGEJO_IMAGE"
+      - crane cp "$SRC_IMAGE" "git.m0sh1.cc/isityael/netzbremse-dashboard:latest"
       - crane cp "$SRC_IMAGE" "$DST_IMAGE"
       - crane cp "$SRC_IMAGE" "harbor.m0sh1.cc/apps/netzbremse-dashboard:latest"
 
