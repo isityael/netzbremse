@@ -19,58 +19,113 @@
   },
   "packageRules": [
     {
-      "matchManagers": ["gomod"],
-      "addLabels": ["go"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "addLabels": [
+        "go"
+      ],
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["npm"],
-      "addLabels": ["npm"],
+      "matchManagers": [
+        "npm"
+      ],
+      "addLabels": [
+        "npm"
+      ],
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["dockerfile"],
-      "addLabels": ["docker"],
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "addLabels": [
+        "docker"
+      ],
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["woodpecker"],
-      "addLabels": ["docker"],
+      "matchManagers": [
+        "woodpecker"
+      ],
+      "addLabels": [
+        "docker"
+      ],
       "semanticCommitType": "ci",
       "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["github-actions"],
-      "addLabels": ["ci"]
+      "matchManagers": [
+        "github-actions"
+      ],
+      "addLabels": [
+        "ci"
+      ]
     },
     {
       "description": "Group semantic-release tooling",
-      "matchPackageNames": ["/semantic-release/"],
+      "matchPackageNames": [
+        "/semantic-release/"
+      ],
       "groupName": "semantic-release"
     },
     {
       "description": "Group all GitHub Actions into a single PR",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "github actions"
     },
     {
       "description": "Auto-merge patch and minor Go module updates — CI-verified",
-      "matchManagers": ["gomod"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "automerge": true
     },
     {
       "description": "Auto-merge GitHub Actions updates",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "automerge": true
     },
     {
       "description": "Group lockfile-only refreshes for package managers where package.json ranges already allow newer versions",
-      "matchUpdateTypes": ["lockFileMaintenance"],
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
       "groupName": "lock file maintenance"
+    },
+    {
+      "description": "Use container version tags only.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "pinDigests": false
+    },
+    {
+      "description": "Do not create container digest pins or digest refreshes.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "pinDigest"
+      ],
+      "enabled": false
     }
+  ],
+  "pinDigests": false,
+  "ignorePresets": [
+    "docker:pinDigests"
   ]
 }
