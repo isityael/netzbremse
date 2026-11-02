@@ -128,7 +128,7 @@ steps:
     commands:
       - syft registry:$${IMAGE_REF} -o spdx-json > dashboard.sbom.spdx.json
 
-  # ── Cosign sign GHCR (parallel, each after its own SBOM) ──────────
+  # ── Cosign sign Forgejo (parallel, each after its own SBOM) ──────────
   - name: cosign-sign-measurement-forgejo
     image: dhi.io/cosign:3.1.4-alpine3.24-dev
     depends_on:
@@ -177,7 +177,7 @@ steps:
       - cosign attest --key /tmp/cosign.key --type vuln --predicate dashboard.vuln.json --yes --signing-config /tmp/cosign-signing-config.json $${IMAGE_REF}
       - rm -f /tmp/cosign.key /tmp/cosign-signing-config.json
 
-  # ── Mirror to Harbor (parallel, each after its own GHCR sign) ──────
+  # ── Mirror to Harbor (parallel, each after its own Forgejo sign) ──────
   - name: mirror-measurement-to-harbor
     image: dhi.io/crane:0.22.1-debian13-dev
     depends_on:
