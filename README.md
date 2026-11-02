@@ -71,8 +71,8 @@ docker build -f Dockerfile.dashboard .
 
 ## CI and release
 
-`https://git.m0sh1.cc/m0sh1/netzbremse` is the source-of-truth repository.
-GitHub is a push mirror for GHCR and GitHub-side automation. Pushes to `main`
+`https://git.m0sh1.cc/isityael/netzbremse` is the source-of-truth repository.
+GitHub is a code mirror for GitHub-side analysis. Pushes to `main`
 run tests and `semantic-release` against Forgejo. The release step needs
 Woodpecker secrets `forgejo_username` and `forgejo_token` with permission to
 push tags to the Forgejo repository; Woodpecker's clone-only netrc credentials
@@ -83,9 +83,9 @@ release pipeline:
 2. Push to `git.m0sh1.cc/isityael/netzbremse-{measurement,dashboard}`
 3. Trivy scan, Cosign sign, SPDX SBOM + vuln attestations
 4. Mirror to `harbor.m0sh1.cc/apps/` with Cosign + Notation signatures
-5. GitHub Actions generate CodeQL analysis and build provenance attestations
+5. GitHub Actions run CodeQL analysis on the code mirror
 
-For the live GitOps deployment, `ghcr.io` is the source of truth. Harbor keeps a
+For the live GitOps deployment, `git.m0sh1.cc/isityael/` is the source of truth. Harbor keeps a
 signed replica for storage and downstream reuse, but the cluster should consume
 `git.m0sh1.cc/isityael/netzbremse-*` images.
 
