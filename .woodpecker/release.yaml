@@ -101,7 +101,7 @@ steps:
 
   # ── SBOM generation (parallel, each after its own scan) ────────────
   - name: sbom-generate-measurement
-    image: dhi.io/syft:1.55.0-alpine3.24-dev
+    image: dhi.io/syft:1.56.0-alpine3.24-dev
     depends_on:
       - trivy-scan-measurement
     environment:
@@ -115,7 +115,7 @@ steps:
       - syft registry:$${IMAGE_REF} -o spdx-json > measurement.sbom.spdx.json
 
   - name: sbom-generate-dashboard
-    image: dhi.io/syft:1.55.0-alpine3.24-dev
+    image: dhi.io/syft:1.56.0-alpine3.24-dev
     depends_on:
       - trivy-scan-dashboard
     environment:
