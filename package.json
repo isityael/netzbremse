@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "@semantic-release/release-notes-generator": "14.1.1",
-    "semantic-release": "25.0.9"
+    "semantic-release": "26.0.1"
   },
   "dependencies": {
-    "puppeteer": "25.16.0"
+    "puppeteer": "25.17.0"
   },
   "overrides": {
     "yauzl": "3.4.0"
